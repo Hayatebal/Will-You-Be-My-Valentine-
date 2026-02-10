@@ -6,9 +6,7 @@
 <title>Bal's Chaotic Valentine 💖</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -27,13 +25,8 @@ body {
     padding: 20px;
 }
 
-h1, h2, h3, h4 {
-    margin: 10px 0;
-}
-
-h1, h2 {
-    color: #ff3f81;
-}
+h1,h2,h3,h4 { margin: 10px 0; }
+h1,h2 { color: #ff3f81; }
 
 input {
     padding: 12px;
@@ -55,20 +48,10 @@ button {
     transition: 0.3s;
 }
 
-.primary {
-    background: #ff3f81;
-    color: white;
-}
+.primary { background: #ff3f81; color: white; }
+.primary:hover { transform: scale(1.05); }
 
-.primary:hover {
-    transform: scale(1.05);
-}
-
-.no {
-    background: white;
-    color: #ff3f81;
-    position: absolute;
-}
+.no { background: white; color: #ff3f81; position: absolute; }
 
 img.profile {
     width: 160px;
@@ -79,11 +62,7 @@ img.profile {
     margin: 15px 0;
 }
 
-.countdown {
-    margin: 10px;
-    font-size: 16px;
-    color: #444;
-}
+.countdown { margin: 10px; font-size: 16px; color: #444; }
 
 @media (max-width: 600px) {
     h1 { font-size: 22px; }
@@ -95,8 +74,12 @@ img.profile {
 
 <body>
 
-<audio autoplay loop id="bgMusic">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+    <source src="romantic.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="dramaticMusic">
+    <source src="dramatic-ending.mp3" type="audio/mpeg">
 </audio>
 
 <div class="screen" id="nameScreen">
@@ -111,10 +94,15 @@ img.profile {
 let personName = "";
 let uploadedImage = "";
 
-// Fix autoplay restriction on mobile
+const bgMusic = document.getElementById("bgMusic");
+const dramaticMusic = document.getElementById("dramaticMusic");
+
+// Ensure music plays after first user interaction
 document.addEventListener("click", function() {
-    const music = document.getElementById("bgMusic");
-    music.play().catch(() => {});
+    if (bgMusic.paused) {
+        bgMusic.volume = 0.6;
+        bgMusic.play().catch(()=>{});
+    }
 }, { once: true });
 
 // Image upload preview
@@ -130,25 +118,16 @@ document.getElementById("myImage").addEventListener("change", function(e){
 
 function startConfession() {
     const nameInput = document.getElementById("theirName").value.trim();
-
-    if (!nameInput) {
-        alert("Please tell me your name first 😤💖");
-        return;
-    }
-
+    if (!nameInput) { alert("Please tell me your name first 😤💖"); return; }
     personName = nameInput;
 
     document.body.innerHTML = `
         <div class="screen">
             <h1>${personName}... 🌸</h1>
-
             ${uploadedImage ? `<img src="${uploadedImage}" class="profile">` : ""}
-
             <h2>My name is Bal, it is my pleasure to be your valentine. 💖</h2>
             <h2>I feel embarrassed to ask for this but, I would like to invite you to be my valentine. 🌸</h2>
-
             <div class="countdown" id="countdown"></div>
-
             <button class="primary" onclick="sayYes()">YES 💘</button>
             <button class="no" id="noBtn">No 😈</button>
         </div>
@@ -160,7 +139,6 @@ function startConfession() {
 
 function setupNoButton() {
     const noBtn = document.getElementById("noBtn");
-
     noBtn.addEventListener("mouseover", () => {
         const x = Math.random() * (window.innerWidth - 100);
         const y = Math.random() * (window.innerHeight - 50);
@@ -183,6 +161,12 @@ function sayYes() {
 }
 
 function finalScene() {
+    // stop romantic bg music
+    bgMusic.pause();
+    // play dramatic ending
+    dramaticMusic.volume = 0.7;
+    dramaticMusic.play().catch(()=>{});
+
     document.body.innerHTML = `
         <div class="screen" style="background:linear-gradient(135deg,#ff3f81,#ff8fab);color:white;">
             <h1>✨ CONTRACT SEALED ✨</h1>
@@ -197,11 +181,9 @@ function startCountdown() {
     function updateCountdown() {
         const now = new Date();
         let year = now.getFullYear();
-        let valentines = new Date(year, 1, 14);
+        let valentines = new Date(year, 1, 14); // Feb 14
 
-        if (now > valentines) {
-            valentines = new Date(year + 1, 1, 14);
-        }
+        if (now > valentines) valentines = new Date(year+1,1,14);
 
         const diff = valentines - now;
 
