@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bal's Chaotic Valentine 💖</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    background: linear-gradient(135deg, #ffc1e3, #c9f0ff);
+    text-align: center;
+    overflow-x: hidden;
+}
+
+.screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #ff3f81;
+    margin: 10px 0;
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 2px solid #ff3f81;
+    margin: 10px;
+    width: 90%;
+    max-width: 300px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    margin: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primary {
+    background: #ff3f81;
+    color: white;
+}
+
+.primary:hover {
+    transform: scale(1.05);
+}
+
+.no {
+    background: white;
+    color: #ff3f81;
+    position: absolute;
+}
+
+img.profile {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #ff3f81;
+    margin: 15px 0;
+}
+
+.countdown {
+    margin: 10px;
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 22px; }
+    h2 { font-size: 18px; }
+    button { font-size: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<!-- NAME INPUT SCREEN -->
+<div class="screen" id="nameScreen">
+    <h1>🌸 Hello there... 🌸</h1>
+    <h2>May I know your name first? 💌</h2>
+    <input type="text" id="theirName" placeholder="Enter your name">
+    <input type="file" id="myImage" accept="image/*">
+    <button class="primary" onclick="startConfession()">Continue 💖</button>
+</div>
+
+<script>
+let personName = "";
+let uploadedImage = "";
+
+// Preview uploaded image
+document.getElementById("myImage").addEventListener("change", function(e){
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        uploadedImage = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+});
+
+function startConfession() {
+    const nameInput = document.getElementById("theirName").value.trim();
+
+    if (!nameInput) {
+        alert("Please tell me your name first 😤💖");
+        return;
+    }
+
+    personName = nameInput;
+
+    document.body.innerHTML = `
+        <div class="screen">
+            <h1>${personName}... 🌸</h1>
+
+            ${uploadedImage ? `<img src="${uploadedImage}" class="profile">` : ""}
+
+            <h2>My name is Bal, it is my pleasure to be your valentine. 💖</h2>
+            <h2>I hate to do this but, I would like to invite you to be my valentine. 🌸</h2>
+
+            <div class="countdown" id="countdown"></div>
+
+            <button class="primary" onclick="sayYes()">YES 💘</button>
+            <button class="no" id="noBtn">No 😈</button>
+        </div>
+    `;
+
+    setupNoButton();
+    startCountdown();
+}
+
+function setupNoButton() {
+    const noBtn = document.getElementById("noBtn");
+
+    noBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    });
+}
+
+function sayYes() {
+    document.body.innerHTML = `
+        <div class="screen" style="background:#ff3f81;color:white;">
+            <h1>YAAAY ${personName.toUpperCase()} 💖💖💖</h1>
+            <h2>You have accepted Bal's invitation 🌸✨</h2>
+            <h3>*confetti, anime sparkles, dramatic OST plays*</h3>
+        </div>
+    `;
+}
+
+function startCountdown() {
+    function updateCountdown() {
+        const now = new Date();
+        let year = now.getFullYear();
+        let valentines = new Date(year, 1, 14);
+
+        if (now > valentines) {
+            valentines = new Date(year + 1, 1, 14);
+        }
+
+        const diff = valentines - now;
+
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff / (1000*60*60)) % 24);
+        const minutes = Math.floor((diff / (1000*60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        document.getElementById("countdown").innerHTML =
+            `💞 ${days}d ${hours}h ${minutes}m ${seconds}s until Valentine's Day 💞`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+}
+</script>
+
+</body>
+</html>
