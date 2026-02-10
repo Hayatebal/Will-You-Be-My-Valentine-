@@ -73,7 +73,7 @@ img.profile {
 }
 
 iframe#ytMusic {
-    display: none;
+    display: none; /* hide player */
 }
 
 @media (max-width: 600px) {
@@ -86,7 +86,7 @@ iframe#ytMusic {
 
 <body>
 
-<!-- Persistent YouTube background music -->
+<!-- Persistent YouTube music -->
 <iframe id="ytMusic" 
     src="https://www.youtube.com/embed/xgwQ1UDrQ94?autoplay=1&loop=1&playlist=xgwQ1UDrQ94&controls=0&mute=0&modestbranding=1" 
     allow="autoplay" frameborder="0"></iframe>
@@ -117,7 +117,7 @@ document.getElementById("myImage").addEventListener("change", function(e){
 });
 
 function startConfession() {
-    // Start music immediately when user clicks "Continue"
+    // Start music immediately on button click (mobile-friendly)
     ytMusic.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
 
     const nameInput = document.getElementById("theirName").value.trim();
@@ -125,105 +125,6 @@ function startConfession() {
         alert("Please tell me your name first 😤💖"); 
         return; 
     }
-    personName = nameInput;
-
-    document.body.innerHTML = `
-        <div class="screen">
-            <h1>${personName}... 🌸</h1>
-            ${uploadedImage ? `<img src="${uploadedImage}" class="profile">` : ""}
-            <h2>My name is Bal, it is my pleasure to be your valentine. 💖</h2>
-            <h2>I feel embarrassed to ask this but, I would like to invite you to be my valentine. 🌸</h2>
-            <div class="countdown" id="countdown"></div>
-            <button class="primary" onclick="sayYes()">YES 💘</button>
-            <button class="no" id="noBtn">No 😈</button>
-        </div>
-    `;
-
-    setupNoButton();
-    startCountdown();
-}
-
-function setupNoButton() {
-    const noBtn = document.getElementById("noBtn");
-    noBtn.addEventListener("mouseover", () => {
-        const x = Math.random() * (window.innerWidth - 100);
-        const y = Math.random() * (window.innerHeight - 50);
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
-    });
-}
-
-function sayYes() {
-    document.body.innerHTML = `
-        <div class="screen" style="background:#ff3f81;color:black;">
-            <h1>YAAAY ${personName.toUpperCase()} 💖💖💖</h1>
-            <h2>You have accepted Bal's invitation 🌸✨</h2>
-            <h2 style="margin-top:20px;">
-                YESS! You're now already reserved for me. OKAY? 😌💘
-            </h2>
-            <button class="primary" onclick="finalScene()">OKAY 😳</button>
-        </div>
-    `;
-}
-
-function finalScene() {
-    document.body.innerHTML = `
-        <div class="screen" style="background:linear-gradient(135deg,#ff3f81,#ff8fab);color:black;">
-            <h1>✨ CONTRACT SEALED ✨</h1>
-            <h2>${personName}, you are officially my Valentine. 💖</h2>
-            <h3>No returns. No refunds. Valid until next February 14. 😈🌸</h3>
-            <h4>*anime ending credits roll*</h4>
-        </div>
-    `;
-}
-
-// Countdown timer
-function startCountdown() {
-    function updateCountdown() {
-        const now = new Date();
-        let year = now.getFullYear();
-        let valentines = new Date(year, 1, 14);
-        if (now > valentines) valentines = new Date(year+1,1,14);
-
-        const diff = valentines - now;
-        const days = Math.floor(diff / (1000*60*60*24));
-        const hours = Math.floor((diff / (1000*60*60)) % 24);
-        const minutes = Math.floor((diff / (1000*60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        document.getElementById("countdown").innerHTML =
-            `💞 ${days}d ${hours}h ${minutes}m ${seconds}s until Valentine's Day 💞`;
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-}
-</script>
-
-</body>
-</html>
-
-const ytMusic = document.getElementById("ytMusic");
-
-// Autoplay on mobile after first tap
-document.addEventListener("click", function() {
-    ytMusic.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-}, { once: true });
-
-// Image preview
-document.getElementById("myImage").addEventListener("change", function(e){
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        uploadedImage = event.target.result;
-    }
-    if (e.target.files[0]) {
-        reader.readAsDataURL(e.target.files[0]);
-    }
-});
-
-function startConfession() {
-    const nameInput = document.getElementById("theirName").value.trim();
-    if (!nameInput) { alert("Please tell me your name first 😤💖"); return; }
     personName = nameInput;
 
     document.body.innerHTML = `
